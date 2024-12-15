@@ -4,4 +4,5 @@ import com.example.pertemuan9.data.entity.Mahasiswa
 
 interface RepositoryMhs {
     suspend fun insertMhs(mahasiswa: Mahasiswa)
+    fun getAllMhs(): Any
 }
