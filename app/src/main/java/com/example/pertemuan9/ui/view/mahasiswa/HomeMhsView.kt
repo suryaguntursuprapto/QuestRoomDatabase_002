@@ -36,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.pertemuan10.ui.viewmodel.HomeUiState
 import com.example.pertemuan9.data.entity.Mahasiswa
 import com.example.pertemuan9.ui.viewmodel.PenyediaViewModel
 import kotlinx.coroutines.launch
@@ -115,3 +116,62 @@ fun ListMahasiswa(
         )
     }
 }
+
+@Composable
+fun BodyHomeMhsView(
+    homeUiState: HomeUiState,
+    onClick: (String) -> Unit = { },
+    modifier: Modifier = Modifier
+){
+    val coroutineScope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() } //snackbar state
+    when {
+        homeUiState.isLoading -> {
+            //menampilkan indikator loading
+            Box(
+                modifier = Modifier.fillMaxSize(),
+            ){
+                CircularProgressIndicator()
+            }
+        }
+        homeUiState.isError -> {
+            // menampilkan pesan error
+            LaunchedEffect(homeUiState.errorMessage) {
+                homeUiState.errorMessage?.let { message ->
+                    coroutineScope.launch {
+                        snackbarHostState.showSnackbar(message) //tampilkan snackbar
+                    }
+                }
+            }
+        }
+        homeUiState.listMhs.isEmpty() -> {
+            // menampilkan pesan jika data kosong
+            Box(
+                modifier = modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ){
+                Text(
+                    text = "Tidak ada data mahasiswa.",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+        }
+
+        else -> {
+            //menampilkan daftar mahasiswa
+            ListMahasiswa(
+                listMhs = homeUiState.listMhs,
+                onClick = {
+                    onClick(it)
+                    println(
+                        it
+                    )
+                },
+                modifier = modifier
+            )
+        }
+    }
+}
+
