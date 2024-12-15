@@ -36,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.pertemuan10.ui.viewmodel.HomeMhsViewModel
 import com.example.pertemuan10.ui.viewmodel.HomeUiState
 import com.example.pertemuan9.data.entity.Mahasiswa
 import com.example.pertemuan9.ui.viewmodel.PenyediaViewModel
@@ -175,3 +176,43 @@ fun BodyHomeMhsView(
     }
 }
 
+@Composable
+fun HomeMhsView(
+    viewModel: HomeMhsViewModel = viewModel(factory = PenyediaViewModel.Factory ),
+    onAddMhs: () -> Unit = { },
+    onDetailClick: (String) -> Unit = { },
+    modifier: Modifier = Modifier
+){
+    Scaffold (
+        topBar = {
+            TopAppBar(
+                judul = "Daftar Mahasiswa",
+                showBackButton = false,
+                onBack = { },
+            )
+        }, modifier = Modifier,
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = onAddMhs,
+                shape = MaterialTheme.shapes.medium,
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Tambah Mahasiswa",
+                )
+            }
+        }
+    ) { innerPadding ->
+        val homeUiState by viewModel.homeUIState.collectAsState()
+
+        BodyHomeMhsView(
+            homeUiState = homeUiState,
+            onClick = {
+                onDetailClick(it)
+            },
+            modifier = Modifier.padding(innerPadding)
+        )
+
+    }
+}
