@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class UpdateMhsViewModel (
+class UpdatedMhsViewModel (
     savedStateHandle: SavedStateHandle,
     private val repositoryMhs: RepositoryMhs
 ) : ViewModel() {
@@ -78,13 +78,15 @@ class UpdateMhsViewModel (
                 snackBarMessage = "Data gagal diupdate"
             )
         }
-        fun resetSnackBarMessage() {
-            updateUIState = updateUIState.copy(snackBarMessage = null)
-        }
+
     }
     fun Mahasiswa.toUIStateMhs(): MhsUIState = MhsUIState(
         mahasiswaEvent = this.toDetailUiEvent(),
     )
+
+    fun resetSnackbarMessage() {
+        updateUIState = updateUIState.copy(snackBarMessage = null)
+    }
 }
 
 
